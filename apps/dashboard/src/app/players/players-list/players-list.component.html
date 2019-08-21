@@ -4,9 +4,9 @@
         <mat-list *ngIf="players.length; else elseBlock">
             <mat-list-item *ngFor="let player of players" class="mat-list-option"
                 (click)="select(player)">
-                <h4 mat-line>{{player.name}}</h4>
-                <span mat-line>{{player.team}}</span>
-                <span mat-line>{{player.position}}</span>
+                <h4 mat-line>Name: {{player.name}}</h4>
+                <span mat-line>Team: {{player.team}}</span>
+                <span mat-line>Position: {{player.position}}</span>
                 <button mat-mini-fab *ngIf="!readonly" (click)="remove(player);$event.stopImmediate.Propagation()">
                     <mat-icon>clear</mat-icon>
                 </button>
