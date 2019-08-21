@@ -1,20 +1,50 @@
 import { Injectable } from '@angular/core';
 
-import { select, Store } from '@ngrx/store';
+import { filter } from 'rxjs/operators';
+import { select, Store, ActionsSubject } from '@ngrx/store';
 
-import * as fromPlayers from './players.reducer';
-import * as PlayersSelectors from './players.selectors';
+import { selectAllPlayers, selectCurrentPlayer } from './players.selectors';
+import { Player } from '@second-pass/core-data';
+import { PlayersState } from './players.reducer';
 import * as PlayersActions from './players.actions';
+import { PlayersActionTypes } from './players.actions';
 
 @Injectable()
 export class PlayersFacade {
-  loaded$ = this.store.pipe(select(PlayersSelectors.getPlayersLoaded));
-  allPlayers$ = this.store.pipe(select(PlayersSelectors.getAllPlayers));
-  selectedPlayers$ = this.store.pipe(select(PlayersSelectors.getSelected));
+  allPlayers$ = this.store.pipe(select(selectAllPlayers));
+  selectedPlayers$ = this.store.pipe(select(selectCurrentPlayer));
 
-  constructor(private store: Store<fromPlayers.PlayersPartialState>) {}
+  mutations$ = this.actions$
+    .pipe(
+      filter(action =>
+        action.type === PlayersActionTypes.ADD_PLAYER
+        || action.type === PlayersActionTypes.UPDATE_PLAYER
+        || action.type === PlayersActionTypes.DELETE_PLAYER
+      )
+    );
 
-  loadAll() {
-    this.store.dispatch(PlayersActions.loadPlayers());
+  constructor(
+    private store: Store<PlayersState>,
+    private actions$: ActionsSubject
+    ) {}
+
+  selectPlayer(playerId: string) {
+    this.store.dispatch(new PlayersActions.PlayerSelected(playerId));
+  }
+
+  loadPlayers() {
+    this.store.dispatch(new PlayersActions.LoadPlayers());
+  }
+
+  createPlayer(player: Player) {
+    this.store.dispatch(new PlayersActions.AddPlayer(player));
+  }
+
+  updatePlayer(player: Player) {
+    this.store.dispatch(new PlayersActions.UpdatePlayer(player));
+  }
+
+  deletePlayer(player: Player) {
+    this.store.dispatch(new PlayersActions.DeletePlayer(player));
   }
 }

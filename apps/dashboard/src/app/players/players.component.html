@@ -1,0 +1,17 @@
+<div class="wrapper">
+    <div class="list-grid">
+        <second-pass-players-list
+            [players]="players$ | async"
+            (selected)="selectPlayer($event)"
+            (deleted)="removePlayer($event)">
+        </second-pass-players-list>
+    </div>
+    <div class="details-grid">
+        <second-pass-player-details
+            [group]="form"
+            [player]="selectedPlayer$ | async"
+            (submitted)="savePlayer($event)"
+            (cancelled)="reset($event)">
+        </second-pass-player-details>
+    </div>
+</div>

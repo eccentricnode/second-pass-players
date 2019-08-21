@@ -1,0 +1,21 @@
+<mat-card>
+    <mat-card-content>
+        <h3 mat-subheader>NBA Players</h3>
+        <mat-list *ngIf="players.length; else elseBlock">
+            <mat-list-item *ngFor="let player of players" class="mat-list-option"
+                (click)="select(player)">
+                <h4 mat-line>{{player.name}}</h4>
+                <span mat-line>{{player.team}}</span>
+                <span mat-line>{{player.position}}</span>
+                <button mat-mini-fab *ngIf="!readonly" (click)="remove(player);$event.stopImmediate.Propagation()">
+                    <mat-icon>clear</mat-icon>
+                </button>
+            </mat-list-item>
+        </mat-list>
+        <ng-template #elseBlock>
+            <div class="spinner">
+                <mat-spinner mode="indeterminate"></mat-spinner>
+            </div>
+        </ng-template>
+    </mat-card-content>
+</mat-card>
